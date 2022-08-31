@@ -31,7 +31,7 @@ public class I18nLabel {
         String lang = Optional.ofNullable(CDI.current())
             .map(cdi -> cdi.select(HttpServerRequest.class))
             .map(Instance::get)
-            .flatMap(this::extractLanguage).orElse("en");
+            .flatMap(I18nLabel::extractLanguage).orElse("en");
         return switch (lang) {
             case "en" -> this.en;
             case "ru" -> this.ru;
@@ -39,7 +39,7 @@ public class I18nLabel {
         };
     }
 
-    public Optional<String> extractLanguage(HttpServerRequest request) {
+    public static Optional<String> extractLanguage(HttpServerRequest request) {
         String acceptLanguage = request.getHeader(HttpHeaders.ACCEPT_LANGUAGE);
         List<ParsableLanguageValue> languages = HeaderParser.sort(HeaderParser.convertToParsedHeaderValues(acceptLanguage, ParsableLanguageValue::new));
         return languages.stream()
